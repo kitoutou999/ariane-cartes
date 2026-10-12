@@ -42,6 +42,7 @@
 }
 
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 html, body { margin: 0; }
 body {
   background: var(--fond);
@@ -112,6 +113,7 @@ main { max-width: 960px; margin: 0 auto; padding: 8px 16px 48px; }
 main.etroit { max-width: 720px; }
 .carte-apercu { height: 42vh; min-height: 260px; border-radius: 12px; border: 1px solid var(--bord); margin: 16px 0 4px; }
 .carte-apercu.grande { height: 55vh; }
+.carte-apercu.plan-seul { background: #111111; }
 .credit { font-size: 0.75em; margin: 0 0 16px; }
 .liste { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
 .carte-ligne {
@@ -144,6 +146,7 @@ ol.discret li { margin: 4px 0; }
 /* Visionneuse */
 body.visionneuse { overflow: hidden; overscroll-behavior: none; }
 #cadre { position: fixed; inset: 0; overflow: hidden; background: #222; }
+body.plan-seul #cadre, body.plan-seul #map { background: #111111; }
 #map {
   position: absolute;
   left: 50%;

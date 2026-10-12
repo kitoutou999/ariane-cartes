@@ -16,48 +16,49 @@
 <main class="etroit">
   <h1>Ajouter une carte</h1>
   <p>La carte est préparée dans ton navigateur : rien n'est envoyé tant que tu ne l'as pas déposée sur GitHub.</p>
+  <p class="discret">Raccourci : tu peux aussi glisser directement le SVG d'Ariane dans le <a id="formulaire-direct" href="#" target="_blank" rel="noopener">formulaire GitHub</a>. Il sera publié comme plan seul, avec le titre du ticket.</p>
 
   <section class="etape">
-    <h2>1. La sortie</h2>
-    <p class="discret">Dans Ariane : Réglages, Mes sorties, ta sortie, Préparer les exports, puis « Partager le JSON (sortie complète) ».</p>
-    <input type="file" id="fichier" accept=".json,application/json">
+    <h2>1. Le plan</h2>
+    <p class="discret">Dans Ariane : Réglages, Mes sorties, ta sortie, Préparer les exports, puis « Partager la carte SVG ».</p>
+    <input type="file" id="fichier" accept=".svg,image/svg+xml">
     <p id="resume-sortie" class="discret"></p>
   </section>
 
-  <section class="etape" id="etape-calage" hidden>
-    <h2>2. Les points GPS</h2>
-    <p>Relève la position de 2 ou 3 lieux-dits <strong>à ciel ouvert</strong> (entrées, puits), le plus éloignés possible les uns des autres. Sur Google Maps : appui long à l'endroit exact, puis touche les coordonnées pour les copier.</p>
-    <div id="points"></div>
-    <button id="ajouter-point" class="bouton secondaire" type="button">Ajouter un point</button>
-    <label class="case"><input type="checkbox" id="deformer" checked> Avec 3 points ou plus, déformer la carte pour qu'elle passe exactement par les points (l'écart est réparti le long de la trace)</label>
-    <div id="bilan" class="bilan"></div>
-    <div id="apercu" class="carte-apercu grande" role="region" aria-label="Aperçu de la carte"></div>
-  </section>
-
   <section class="etape" id="etape-infos" hidden>
-    <h2>3. Les informations</h2>
+    <h2>2. Les informations</h2>
     <label class="champ">Titre<input id="titre" maxlength="80" required></label>
     <label class="champ">Auteur (pseudo, facultatif)<input id="auteur" maxlength="40"></label>
     <label class="champ">Lieu (facultatif)<input id="lieu" maxlength="60" placeholder="Commune, nom de la carrière"></label>
     <label class="champ">Date de la sortie<input id="date" type="date"></label>
     <label class="champ">Description (facultatif)<textarea id="description" maxlength="1000" rows="3"></textarea></label>
-    <p class="discret">La carte publiée contient la trace, les noms des lieux-dits et le jour de la sortie, sans les heures ni les photos. Tout le monde pourra la voir.</p>
+  </section>
+
+  <section class="etape" id="etape-calage" hidden>
+    <h2>3. Placer sur le terrain (facultatif)</h2>
+    <p>Sans point GPS, la carte est publiée comme un plan : fond sombre, nord en haut, boussole utilisable. Pour la poser aussi sur la photo aérienne, ajoute les coordonnées de 2 ou 3 lieux-dits relevés <strong>à ciel ouvert</strong> (entrées, puits), le plus éloignés possible. Sur Google Maps : appui long à l'endroit exact, puis touche les coordonnées pour les copier.</p>
+    <div id="points"></div>
+    <button id="ajouter-point" class="bouton secondaire" type="button">Ajouter un point GPS</button>
+    <label class="case"><input type="checkbox" id="deformer" checked> Avec 3 points ou plus, déformer la carte pour qu'elle passe exactement par les points (l'écart est réparti le long de la trace)</label>
+    <div id="bilan" class="bilan"></div>
+    <div id="apercu" class="carte-apercu grande" role="region" aria-label="Aperçu de la carte"></div>
   </section>
 
   <section class="etape" id="etape-publier" hidden>
     <h2>4. Publier</h2>
     <div class="ligne-boutons">
       <button id="voir" class="bouton secondaire" type="button">Voir en plein écran</button>
-      <button id="telecharger" class="bouton" type="button">Télécharger le fichier</button>
+      <button id="telecharger" class="bouton" type="button">Télécharger la carte (SVG)</button>
     </div>
     <div id="apres-telechargement" hidden>
-      <p>Le fichier est téléchargé. Pour le publier (compte GitHub gratuit nécessaire) :</p>
+      <p>Le SVG est téléchargé. Pour le publier (compte GitHub gratuit nécessaire) :</p>
       <ol>
         <li><a id="formulaire" class="bouton" href="#" target="_blank" rel="noopener">Ouvrir le formulaire GitHub</a></li>
-        <li>Glisse le fichier dans la zone « Fichier de la carte » (sur téléphone : touche la zone, puis l'icône de pièce jointe).</li>
+        <li>Glisse le fichier SVG dans la zone « Plan de la carte » (sur téléphone : touche la zone, puis l'icône de pièce jointe).</li>
         <li>Valide avec « Create ». La carte est vérifiée puis publiée automatiquement en une à deux minutes ; la réponse s'affiche dans le ticket.</li>
       </ol>
     </div>
+    <p class="discret">La carte publiée contient la trace, les noms des lieux-dits, le jour de la sortie et les points GPS saisis. Tout le monde pourra la voir.</p>
     <p id="erreur" class="erreur" role="alert"></p>
   </section>
 </main>

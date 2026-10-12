@@ -45,10 +45,11 @@
     <label class="champ">Aller vers<select id="cible"><option value="">(aucun)</option></select></label>
     <label class="case"><input type="checkbox" id="orientee"> Carte orientée : le haut de l'écran suit le téléphone</label>
     <div class="ligne-champs">
-      <label class="champ">Fond<select id="fond"></select></label>
+      <label class="champ" id="choix-fond">Fond<select id="fond"></select></label>
       <label class="champ">Noms des lieux-dits<select id="noms"><option value="auto">Selon le zoom</option><option value="toujours">Toujours</option><option value="jamais">Jamais</option></select></label>
     </div>
     <div id="infos" class="infos"></div>
+    <p><a id="telecharger-svg" class="bouton secondaire petit" href="#">Télécharger le plan (SVG)</a></p>
     <p class="avertissement">Cartes approximatives, relevées au podomètre et à la boussole par l'application expérimentale Ariane : plusieurs dizaines de mètres d'erreur sont possibles. Elles ne remplacent ni un plan, ni des repères, ni la prudence. L'accès aux carrières souterraines est souvent interdit et toujours dangereux. La boussole est déviée par le métal (rails, ferraille, voitures).</p>
     <p id="credit" class="discret credit"></p>
   </div>

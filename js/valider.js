@@ -2,7 +2,7 @@
 // les cartes déposées. Seuls les champs connus sont recopiés.
 import { CATEGORIES } from './geo.js';
 
-const METHODES = ['deformation', 'similitude', 'translation'];
+const METHODES = ['deformation', 'similitude', 'translation', 'aucun'];
 
 function texte(v, max, champ, { requis = false, lignes = false } = {}) {
   if (v === undefined || v === null || v === '') {
@@ -29,7 +29,7 @@ const point = (p, champ) => {
 
 export function valider(c) {
   if (!c || typeof c !== 'object' || c.format !== 'ariane-carte') {
-    throw new Error("Ce fichier n'est pas une carte préparée par la page « Ajouter une carte ».");
+    throw new Error('Carte invalide.');
   }
   if (c.version !== 1) throw new Error('Version de carte non prise en charge.');
   const date = texte(c.date, 10, 'date');

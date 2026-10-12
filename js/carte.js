@@ -1,8 +1,8 @@
 // Visionneuse : une carte, la boussole du téléphone, la direction d'un lieu-dit à l'autre.
 import { distanceCap } from './geo.js';
 import { fonds, lireFond, memoriserFond } from './fonds.js';
-import { dessiner, afficherNoms, el, nomCategorie, cardinal, formaterDistance, formaterDate, texteCalage } from './rendu.js';
-import { valider } from './valider.js';
+import { dessiner, afficherNoms, el, nomCategorie, cardinal, formaterDistance, formaterDate, texteCalage, grillePlan, estPlace } from './rendu.js';
+import { carteDepuisSVG } from './svg.js';
 
 const $ = id => document.getElementById(id);
 const params = new URLSearchParams(location.search);
@@ -24,7 +24,6 @@ function choisirFond(cle) {
 }
 for (const [cle, f] of Object.entries(lesFonds)) $('fond').append(el('option', { texte: f.nom, attrs: { value: cle } }));
 $('fond').addEventListener('change', e => choisirFond(e.target.value));
-choisirFond(lireFond());
 
 $('zplus').addEventListener('click', () => map.zoomIn());
 $('zmoins').addEventListener('click', () => map.zoomOut());
@@ -279,7 +278,9 @@ let modeNoms = 'auto', nomsAffiches = null;
 try { modeNoms = localStorage.getItem('noms') || 'auto'; } catch { /* sans stockage : mode auto */ }
 function appliquerNoms() {
   if (!carte) return;
-  const voulu = modeNoms === 'auto' ? (map.getZoom() >= 18 ? 'toujours' : 'jamais') : modeNoms;
+  // Mode auto : noms affichés à partir de 0,45 m par pixel (quelle que soit la latitude).
+  const metresParPixel = 40075016.686 * Math.cos(map.getCenter().lat * Math.PI / 180) / (256 * 2 ** map.getZoom());
+  const voulu = modeNoms === 'auto' ? (metresParPixel < 0.45 ? 'toujours' : 'jamais') : modeNoms;
   if (voulu !== nomsAffiches) { afficherNoms(carte, marqueurs, voulu); nomsAffiches = voulu; }
 }
 $('noms').value = modeNoms;
@@ -304,24 +305,39 @@ function remplirInfos() {
   }
 }
 
+/** Renvoie { carte, svg, fichier } : le plan publié, ou l'aperçu préparé par la page d'ajout. */
 async function charger() {
   if (params.has('apercu')) {
-    let brut = null;
-    try { brut = JSON.parse(localStorage.getItem('carte-apercu')); } catch { /* rien */ }
-    if (!brut) throw new Error("Aperçu introuvable : relance-le depuis la page « Ajouter une carte ».");
-    return valider(brut);
+    let svg = null;
+    try { svg = localStorage.getItem('carte-apercu'); } catch { /* rien */ }
+    if (!svg) throw new Error("Aperçu introuvable : relance-le depuis la page « Ajouter une carte ».");
+    return { carte: carteDepuisSVG(svg, { titreParDefaut: 'Aperçu' }).carte, svg, fichier: null };
   }
   const id = params.get('c') || '';
   if (!/^[a-z0-9-]+$/.test(id)) throw new Error('Carte introuvable.');
-  const r = await fetch(`cartes/${id}.json`);
+  const r = await fetch(`cartes/${id}.svg`);
   if (!r.ok) throw new Error('Carte introuvable.');
-  return valider(await r.json());
+  const svg = await r.text();
+  return { carte: carteDepuisSVG(svg, { titreParDefaut: id }).carte, svg, fichier: `cartes/${id}.svg` };
 }
 
 try {
-  carte = await charger();
+  const charge = await charger();
+  carte = charge.carte;
   document.title = carte.titre;
   $('titre').textContent = carte.titre;
+  if (estPlace(carte)) choisirFond(lireFond());
+  else {
+    // Plan seul : pas de fond de carte ni de GPS, quadrillage de 10 m.
+    document.body.classList.add('plan-seul');
+    grillePlan(carte).addTo(map);
+    $('choix-fond').hidden = true;
+    $('gps').hidden = true;
+    $('credit').textContent = '';
+  }
+  const lien = $('telecharger-svg');
+  lien.href = charge.fichier || URL.createObjectURL(new Blob([charge.svg], { type: 'image/svg+xml' }));
+  lien.download = `${(params.get('c') || 'apercu')}.svg`;
   ({ marqueurs } = dessiner(map, carte, { noms: 'jamais', auClic: ouvrirPopup }));
   map.fitBounds(L.latLngBounds(carte.traces.flat()).pad(0.08));
   remplirInfos();

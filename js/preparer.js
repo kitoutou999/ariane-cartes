@@ -1,40 +1,24 @@
-// Transforme une sortie exportée par Ariane (« Partager le JSON ») en carte publiable :
-// calage sur des points GPS, trace simplifiée, sans heures ni photos.
+// Transforme un plan Ariane (lu depuis son SVG) en carte affichable : calage facultatif sur des
+// points GPS, trace simplifiée.
 import { CATEGORIES, projection, similitude, appliquer, echelle, rotation, compenser, simplifier } from './geo.js';
 
 export const FORMAT = 'ariane-carte';
-const DATE_REFERENCE_APPLE = 978307200; // 01/01/2001, origine des dates encodées par Swift
-
-export function lireSortie(obj) {
-  if (!obj || !Array.isArray(obj.points) || !Array.isArray(obj.landmarks)) {
-    throw new Error("Ce fichier n'est pas une sortie Ariane : utilise « Partager le JSON (sortie complète) ».");
-  }
-  if (obj.points.length < 2) throw new Error('La sortie ne contient pas de trace.');
-  if (!obj.landmarks.length) throw new Error('La sortie ne contient aucun lieu-dit.');
-  return obj;
-}
-
-export function dateSortie(sortie) {
-  if (typeof sortie.startedAt !== 'number') return '';
-  const d = new Date((sortie.startedAt + DATE_REFERENCE_APPLE) * 1000);
-  const deux = v => String(v).padStart(2, '0');
-  return `${d.getFullYear()}-${deux(d.getMonth() + 1)}-${deux(d.getDate())}`;
-}
 
 /**
- * points : [{ lieu: index du lieu-dit dans sortie.landmarks, lat, lon }]
+ * sortie : { points: [[x, y]], landmarks: [{ name, cat, x, y, createdIdx, visits }], segments, distance }
+ * points : points GPS facultatifs [{ lieu: index du lieu-dit, lat, lon }].
+ * Aucun point : plan seul, placé sur des coordonnées fictives autour de (0, 0), nord en haut.
  * Un point : translation (nord magnétique, échelle d'Ariane). Deux : similitude exacte.
  * Trois ou plus : similitude par moindres carrés, puis déformation si `deformer`.
  */
 export function preparer(sortie, points, { deformer = true, infos = {} } = {}) {
-  if (!points.length) throw new Error('Il faut au moins un point de calage.');
   const lieux = sortie.landmarks;
-  const proj = projection(points[0].lat, points[0].lon);
+  const proj = points.length ? projection(points[0].lat, points[0].lon) : projection(0, 0);
   const A = points.map(p => [lieux[p.lieu].x, lieux[p.lieu].y]);
   const B = points.map(p => proj.versLocal(p.lat, p.lon));
-  const sim = similitude(A, B);
+  const sim = points.length ? similitude(A, B) : { k: [1, 0], t: [0, 0] };
   const brut = sortie.points.map(p => appliquer(sim, [p[0], p[1]]));
-  const methode = points.length >= 3 && deformer ? 'deformation' : points.length >= 2 ? 'similitude' : 'translation';
+  const methode = !points.length ? 'aucun' : points.length >= 3 && deformer ? 'deformation' : points.length >= 2 ? 'similitude' : 'translation';
   const Q = methode === 'deformation'
     ? compenser(brut, lieux, points.map((p, j) => ({ lieu: p.lieu, cible: B[j], sigma: 1 })))
     : brut;
@@ -61,7 +45,7 @@ export function preparer(sortie, points, { deformer = true, infos = {} } = {}) {
     auteur: infos.auteur || '',
     lieu: infos.lieu || '',
     description: infos.description || '',
-    date: infos.date ?? dateSortie(sortie),
+    date: infos.date || '',
     distance: Math.round(sortie.distance || 0),
     calage: {
       methode,

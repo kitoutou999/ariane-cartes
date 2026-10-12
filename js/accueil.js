@@ -39,20 +39,23 @@ try {
 } catch { /* pas d'index : liste vide */ }
 if (!Array.isArray(index)) index = [];
 
+// Seules les cartes placées sur le terrain (points GPS) apparaissent sur la carte de l'accueil.
 const bornes = L.latLngBounds([]);
 for (const c of index) {
   if (!c || !/^[a-z0-9-]+$/.test(c.id) || !Array.isArray(c.apercu) || !c.apercu.length) continue;
   const lien = `carte.html?c=${c.id}`;
-  const traces = L.polyline(c.apercu, { color: couleur, weight: 3 }).addTo(map);
-  traces.bindTooltip(el('span', { texte: String(c.titre) }), { sticky: true });
-  traces.on('click', () => { location.href = lien; });
-  L.circleMarker(c.apercu[0][0], { radius: 6, color: '#fff', weight: 2, fillColor: couleur, fillOpacity: 1 })
-    .bindTooltip(el('span', { texte: String(c.titre) }))
-    .on('click', () => { location.href = lien; })
-    .addTo(map);
-  bornes.extend(traces.getBounds());
+  if (c.place) {
+    const traces = L.polyline(c.apercu, { color: couleur, weight: 3 }).addTo(map);
+    traces.bindTooltip(el('span', { texte: String(c.titre) }), { sticky: true });
+    traces.on('click', () => { location.href = lien; });
+    L.circleMarker(c.apercu[0][0], { radius: 6, color: '#fff', weight: 2, fillColor: couleur, fillOpacity: 1 })
+      .bindTooltip(el('span', { texte: String(c.titre) }))
+      .on('click', () => { location.href = lien; })
+      .addTo(map);
+    bornes.extend(traces.getBounds());
+  }
   const details = [c.auteur && `Par ${c.auteur}`, formaterDate(c.date), c.lieu].filter(Boolean).join(' · ');
-  const chiffres = `${formaterDistance(c.distance || 0)} parcourus, ${c.lieux || 0} lieux-dits`;
+  const chiffres = `${formaterDistance(c.distance || 0)} parcourus, ${c.lieux || 0} lieux-dits${c.place ? '' : ', plan seul'}`;
   liste.append(el('li', {}, [el('a', { classe: 'carte-ligne', attrs: { href: lien } }, [
     vignette(c.apercu),
     el('div', {}, [el('strong', { texte: String(c.titre) }), el('div', { classe: 'discret', texte: details }), el('div', { classe: 'discret', texte: chiffres })]),
@@ -61,6 +64,7 @@ for (const c of index) {
 
 if (bornes.isValid()) map.fitBounds(bornes.pad(0.3), { maxZoom: 16 });
 else {
-  map.setView([46.6, 2.4], 5);
-  liste.append(el('li', { classe: 'vide', texte: 'Aucune carte pour le moment.' }));
+  document.getElementById('apercu').hidden = true;
+  document.getElementById('credit').hidden = true;
 }
+if (!liste.children.length) liste.append(el('li', { classe: 'vide', texte: 'Aucune carte pour le moment.' }));

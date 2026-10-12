@@ -1,17 +1,19 @@
 name: Nouvelle carte
-description: Publier une carte préparée avec la page « Ajouter une carte » du site.
+description: Publier le plan SVG d'une sortie Ariane.
 title: "Carte : "
 labels: ["nouvelle-carte"]
 body:
   - type: markdown
     attributes:
       value: |
-        Prépare d'abord ta carte sur la page « Ajouter une carte » du site, puis télécharge le fichier `.json`.
+        Mets le nom de la carte dans le titre du ticket, après « Carte : ».
+        Dans Ariane : Réglages, Mes sorties, ta sortie, Préparer les exports, puis « Partager la carte SVG ».
+        Le SVG peut être déposé tel quel (il sera publié comme plan), ou préparé sur la page « Ajouter une carte » du site pour ajouter un auteur, une description ou des points GPS.
         À l'envoi, le fichier est vérifié puis publié automatiquement en une à deux minutes. La carte est publique.
   - type: textarea
     id: fichier
     attributes:
-      label: Fichier de la carte
-      description: Glisse ici le fichier .json préparé par le site (sur téléphone, touche la zone puis l'icône de pièce jointe).
+      label: Plan de la carte
+      description: Glisse ici le fichier .svg (sur téléphone, touche la zone puis l'icône de pièce jointe).
     validations:
       required: true
