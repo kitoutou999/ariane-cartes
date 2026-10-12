@@ -1,0 +1,17 @@
+name: Nouvelle carte
+description: Publier une carte préparée avec la page « Ajouter une carte » du site.
+title: "Carte : "
+labels: ["nouvelle-carte"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Prépare d'abord ta carte sur la page « Ajouter une carte » du site, puis télécharge le fichier `.json`.
+        À l'envoi, le fichier est vérifié puis publié automatiquement en une à deux minutes. La carte est publique.
+  - type: textarea
+    id: fichier
+    attributes:
+      label: Fichier de la carte
+      description: Glisse ici le fichier .json préparé par le site (sur téléphone, touche la zone puis l'icône de pièce jointe).
+    validations:
+      required: true

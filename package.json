@@ -1,0 +1,8 @@
+{
+  "name": "ariane-cartes",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "index": "node scripts/index.js"
+  }
+}

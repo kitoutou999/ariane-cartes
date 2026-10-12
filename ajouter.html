@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Ajouter une carte</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+<header class="entete">
+  <a class="marque" href="./">Cartes Ariane</a>
+  <nav><a href="./">Cartes</a><a href="ajouter.html" aria-current="page">Ajouter une carte</a></nav>
+</header>
+<main class="etroit">
+  <h1>Ajouter une carte</h1>
+  <p>La carte est préparée dans ton navigateur : rien n'est envoyé tant que tu ne l'as pas déposée sur GitHub.</p>
+
+  <section class="etape">
+    <h2>1. La sortie</h2>
+    <p class="discret">Dans Ariane : Réglages, Mes sorties, ta sortie, Préparer les exports, puis « Partager le JSON (sortie complète) ».</p>
+    <input type="file" id="fichier" accept=".json,application/json">
+    <p id="resume-sortie" class="discret"></p>
+  </section>
+
+  <section class="etape" id="etape-calage" hidden>
+    <h2>2. Les points GPS</h2>
+    <p>Relève la position de 2 ou 3 lieux-dits <strong>à ciel ouvert</strong> (entrées, puits), le plus éloignés possible les uns des autres. Sur Google Maps : appui long à l'endroit exact, puis touche les coordonnées pour les copier.</p>
+    <div id="points"></div>
+    <button id="ajouter-point" class="bouton secondaire" type="button">Ajouter un point</button>
+    <label class="case"><input type="checkbox" id="deformer" checked> Avec 3 points ou plus, déformer la carte pour qu'elle passe exactement par les points (l'écart est réparti le long de la trace)</label>
+    <div id="bilan" class="bilan"></div>
+    <div id="apercu" class="carte-apercu grande" role="region" aria-label="Aperçu de la carte"></div>
+  </section>
+
+  <section class="etape" id="etape-infos" hidden>
+    <h2>3. Les informations</h2>
+    <label class="champ">Titre<input id="titre" maxlength="80" required></label>
+    <label class="champ">Auteur (pseudo, facultatif)<input id="auteur" maxlength="40"></label>
+    <label class="champ">Lieu (facultatif)<input id="lieu" maxlength="60" placeholder="Commune, nom de la carrière"></label>
+    <label class="champ">Date de la sortie<input id="date" type="date"></label>
+    <label class="champ">Description (facultatif)<textarea id="description" maxlength="1000" rows="3"></textarea></label>
+    <p class="discret">La carte publiée contient la trace, les noms des lieux-dits et le jour de la sortie, sans les heures ni les photos. Tout le monde pourra la voir.</p>
+  </section>
+
+  <section class="etape" id="etape-publier" hidden>
+    <h2>4. Publier</h2>
+    <div class="ligne-boutons">
+      <button id="voir" class="bouton secondaire" type="button">Voir en plein écran</button>
+      <button id="telecharger" class="bouton" type="button">Télécharger le fichier</button>
+    </div>
+    <div id="apres-telechargement" hidden>
+      <p>Le fichier est téléchargé. Pour le publier (compte GitHub gratuit nécessaire) :</p>
+      <ol>
+        <li><a id="formulaire" class="bouton" href="#" target="_blank" rel="noopener">Ouvrir le formulaire GitHub</a></li>
+        <li>Glisse le fichier dans la zone « Fichier de la carte » (sur téléphone : touche la zone, puis l'icône de pièce jointe).</li>
+        <li>Valide avec « Create ». La carte est vérifiée puis publiée automatiquement en une à deux minutes ; la réponse s'affiche dans le ticket.</li>
+      </ol>
+    </div>
+    <p id="erreur" class="erreur" role="alert"></p>
+  </section>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script type="module" src="js/ajouter.js"></script>
+</body>
+</html>

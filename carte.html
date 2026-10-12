@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Carte</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body class="visionneuse">
+<div id="cadre"><div id="map"></div></div>
+
+<header class="barre">
+  <a class="bouton-rond" href="./" aria-label="Retour aux cartes">&larr;</a>
+  <h1 id="titre">Chargement...</h1>
+</header>
+
+<div class="zoom">
+  <button class="bouton-rond" id="zplus" type="button" aria-label="Zoomer">+</button>
+  <button class="bouton-rond" id="zmoins" type="button" aria-label="Dézoomer">-</button>
+  <div class="bouton-rond nord" id="nord" title="Nord" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24"><path d="M12 2 L16.5 12 H7.5 Z" class="nord-haut"/><path d="M7.5 12 H16.5 L12 22 Z" class="nord-bas"/></svg></div>
+</div>
+
+<div id="hud" class="hud" hidden aria-live="polite">
+  <div id="hud-cap" class="hud-cap"></div>
+  <div id="hud-cible" class="hud-cible" hidden>
+    <svg id="fleche" viewBox="0 0 40 40" width="44" height="44" aria-hidden="true"><path d="M20 3 L32 34 L20 27 L8 34 Z"/></svg>
+    <div><div id="hud-cible-nom" class="hud-nom"></div><div id="hud-cible-detail" class="discret"></div></div>
+  </div>
+  <div id="hud-note" class="hud-note" hidden></div>
+</div>
+
+<div id="message" class="message" role="status" hidden></div>
+
+<section id="panneau" class="panneau">
+  <button id="poignee" class="poignee" type="button" aria-expanded="false" aria-controls="corps">Boussole, lieux-dits et infos</button>
+  <div class="panneau-corps" id="corps">
+    <div class="ligne-boutons">
+      <button id="boussole" class="bouton" type="button">Activer la boussole</button>
+      <button id="gps" class="bouton secondaire" type="button">Ma position GPS</button>
+    </div>
+    <p class="discret">Sous terre, pas de GPS : choisis le lieu-dit où tu te trouves (ou touche-le sur la carte), tiens le téléphone à plat. Le cône montre où tu regardes, la flèche la direction du lieu-dit visé.</p>
+    <label class="champ">Je suis à<select id="jesuis"><option value="">(choisir un lieu-dit)</option></select></label>
+    <label class="champ">Aller vers<select id="cible"><option value="">(aucun)</option></select></label>
+    <label class="case"><input type="checkbox" id="orientee"> Carte orientée : le haut de l'écran suit le téléphone</label>
+    <div class="ligne-champs">
+      <label class="champ">Fond<select id="fond"></select></label>
+      <label class="champ">Noms des lieux-dits<select id="noms"><option value="auto">Selon le zoom</option><option value="toujours">Toujours</option><option value="jamais">Jamais</option></select></label>
+    </div>
+    <div id="infos" class="infos"></div>
+    <p class="avertissement">Cartes approximatives, relevées au podomètre et à la boussole par l'application expérimentale Ariane : plusieurs dizaines de mètres d'erreur sont possibles. Elles ne remplacent ni un plan, ni des repères, ni la prudence. L'accès aux carrières souterraines est souvent interdit et toujours dangereux. La boussole est déviée par le métal (rails, ferraille, voitures).</p>
+    <p id="credit" class="discret credit"></p>
+  </div>
+</section>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script type="module" src="js/carte.js"></script>
+</body>
+</html>

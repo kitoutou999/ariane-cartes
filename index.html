@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Cartes Ariane</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+<header class="entete">
+  <a class="marque" href="./">Cartes Ariane</a>
+  <nav><a href="./" aria-current="page">Cartes</a><a href="ajouter.html">Ajouter une carte</a></nav>
+</header>
+<main>
+  <div id="apercu" class="carte-apercu" role="region" aria-label="Emplacement des cartes"></div>
+  <p id="credit" class="discret credit"></p>
+  <p class="avertissement">Cartes approximatives, relevées au podomètre et à la boussole par l'application expérimentale Ariane : plusieurs dizaines de mètres d'erreur sont possibles. Elles ne remplacent ni un plan, ni des repères, ni la prudence. L'accès aux carrières souterraines est souvent interdit et toujours dangereux.</p>
+  <h2>Cartes</h2>
+  <ul id="liste" class="liste"></ul>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script type="module" src="js/accueil.js"></script>
+</body>
+</html>
